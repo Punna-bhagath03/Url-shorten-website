@@ -1,139 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>URL Shrinker</title>
 
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background-color: #f4f4f4;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URL Shrinker</title>
 
-      h1 {
-        text-align: center;
-        margin-bottom: 20px;
-      }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
 
-      form {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-      }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
 
-      input[type="text"] {
-        padding: 10px;
-        width: 300px;
-        margin-right: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
+    form {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
 
-      button {
-        padding: 10px 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-      }
+    input[type="text"] {
+      padding: 10px;
+      width: 300px;
+      margin-right: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
 
-      button:hover {
-        background-color: #0056b3;
-      }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
+    button:hover {
+      background-color: #0056b3;
+    }
 
-      table,
-      th,
-      td {
-        border: 1px solid #ddd;
-      }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
 
-      th,
-      td {
-        padding: 12px;
-        text-align: left;
-      }
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+    }
 
-      th {
-        background-color: #007bff;
-        color: white;
-      }
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+    }
 
-      td a {
-        color: #007bff;
-        text-decoration: none;
-      }
+    th {
+      background-color: #007bff;
+      color: white;
+    }
 
-      td a:hover {
-        text-decoration: underline;
-      }
+    td a {
+      color: #007bff;
+      text-decoration: none;
+    }
 
-      .delete-button {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 6px 12px;
-        cursor: pointer;
-        border-radius: 4px;
-      }
+    td a:hover {
+      text-decoration: underline;
+    }
 
-      .delete-button:hover {
-        background-color: #c82333;
-      }
+    .delete-button {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
 
-      .form-delete {
-        display: inline;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>URL Shrinker</h1>
+    .delete-button:hover {
+      background-color: #c82333;
+    }
 
-    <!-- Form to input a new URL -->
-    <form action="/shortUrls" method="POST">
-      <label for="fullUrl">Full URL:</label>
-      <input type="text" name="fullUrl" id="fullUrl" required />
-      <button type="submit">Shrink</button>
-    </form>
+    .form-delete {
+      display: inline;
+    }
 
+    .flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .button-logout {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+
+  </style>
+</head>
+
+<body>
+  <h1>URL Shrinker</h1>
+
+  <!-- Form to input a new URL -->
+  <form action="/api/shortUrls" method="POST">
+    <label for="fullUrl">Full URL:</label>
+    <input type="text" name="fullUrl" id="fullUrl" required />
+    <button type="submit">Shrink</button>
+  </form>
+
+  <div class="flex">
     <h2>Shortened URLs</h2>
-    <table>
-      <thead>
+    <a href="/api/users/logout" class="button-logout">Logout</a>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Full URL</th>
+        <th>Short URL</th>
+        <th>Clicks</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% shortUrls.forEach(shortUrl=> { %>
         <tr>
-          <th>Full URL</th>
-          <th>Short URL</th>
-          <th>Clicks</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% shortUrls.forEach(shortUrl => { %>
-        <tr>
-          <td><%= shortUrl.full %></td>
-          <td><a href="/<%= shortUrl.short %>"><%= shortUrl.short %></a></td>
-          <td><%= shortUrl.clicks %></td>
+          <td>
+            <%= shortUrl.full %>
+          </td>
+          <td><a href="/api/shortUrls/<%= shortUrl.short %>">
+              <%= shortUrl.short %>
+            </a></td>
+          <td>
+            <%= shortUrl.clicks %>
+          </td>
           <td>
             <!-- Form for deleting the URL -->
-            <form
-              action="/shortUrls/<%= shortUrl._id %>?_method=DELETE"
-              method="POST"
-              class="form-delete"
-            >
+            <form action="/api/shortUrls/<%= shortUrl._id %>?_method=DELETE" method="POST" class="form-delete">
               <button type="submit" class="delete-button">Delete</button>
             </form>
           </td>
         </tr>
         <% }) %>
-      </tbody>
-    </table>
-  </body>
+    </tbody>
+  </table>
+</body>
+
 </html>
